@@ -1,4 +1,5 @@
 use async_openai::{Client, config::OpenAIConfig};
+use serde::Deserialize;
 use serde_json::{Value, json};
 
 use crate::utils::{args_info::Args, config::Config};
@@ -48,7 +49,25 @@ pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::E
 
 
     // TODO: Uncomment the lines below to pass the first stage
-    if let Some(content) = response["choices"][0]["message"]["content"].as_str() {
+    let choices = &response["choices"];
+    let first_choice = &choices[0];
+    let message = &first_choice["message"];
+    let tool_calls = &message["tool_calls"][0];
+    let _tool_call_id = &tool_calls["id"].as_str();
+    let _tool_call_type = &tool_calls["type"].as_str();
+    let tool_call_function = &tool_calls["function"];
+    let _func_name = &tool_call_function["name"].as_str();
+    // println!("Till here successfull");
+    // prin)
+    if let Some(func_args) = tool_call_function["arguments"].as_str() {
+        #[derive(Deserialize,Debug)]
+        struct FuncParam {
+            file_path: String,
+        }
+        let fp = serde_json::from_str::<FuncParam>(func_args)?;
+        let output = std::fs::read_to_string(fp.file_path)?;
+        println!("{}",output);
+    } else if let Some(content) = response["choices"][0]["message"].as_str() {
         println!("{}", content);
     }
 
