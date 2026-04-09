@@ -24,7 +24,7 @@ pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::E
                 }
             ],
             "model": config.model_name(),
-            "tool": [
+            "tools": [
                 {
                     "type": "function",
                     "function": {
