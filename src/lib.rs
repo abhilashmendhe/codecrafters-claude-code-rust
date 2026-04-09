@@ -52,27 +52,31 @@ pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::E
     let choices = &response["choices"];
     let first_choice = &choices[0];
     let message = &first_choice["message"];
-    let tool_calls = &message["tool_calls"][0];
-    let _tool_call_id = &tool_calls["id"].as_str();
-    let _tool_call_type = &tool_calls["type"].as_str();
-    let tool_call_function = &tool_calls["function"];
-    let _func_name = &tool_call_function["name"].as_str();
     // println!("Till here successfull");
     // prin)
-    
-    if let Some(func_args) = tool_call_function["arguments"].as_str() {
-        #[derive(Deserialize,Debug)]
-        struct FuncParam {
-            file_path: String,
+        
+    if let Some(tool_calls) = message.get("tool_calls").and_then(|v| v.as_array()) {
+    // Handle tool calls
+        let tool_call = &tool_calls[0];
+        let _tool_call_id = &tool_call["id"].as_str();
+        let _tool_call_type = &tool_call["type"].as_str();
+        let tool_call_function = &tool_call["function"];
+        let _func_name = &tool_call_function["name"].as_str();
+        if let Some(func_args) = tool_call_function["arguments"].as_str() {
+           #[derive(Deserialize,Debug)]
+            struct FuncParam {
+                file_path: String,
+            }
+            let fp = serde_json::from_str::<FuncParam>(func_args)?;
+            let output = std::fs::read_to_string(fp.file_path)?;
+            println!("{}",output);
         }
-        let fp = serde_json::from_str::<FuncParam>(func_args)?;
-        let output = std::fs::read_to_string(fp.file_path)?;
-        println!("{}",output);
-    } else if let Some(content) = response["choices"][0]["message"].as_str() {
-        println!("{}", content);
     } else {
-        println!("{:?}",first_choice);
+        // Handle plain text response
+        if let Some(content) = message["content"].as_str() {
+            println!("{}", content);
+        } 
     }
-
+    
     Ok(())
 }
