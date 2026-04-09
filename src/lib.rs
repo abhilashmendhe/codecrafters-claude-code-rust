@@ -59,6 +59,7 @@ pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::E
     let _func_name = &tool_call_function["name"].as_str();
     // println!("Till here successfull");
     // prin)
+    
     if let Some(func_args) = tool_call_function["arguments"].as_str() {
         #[derive(Deserialize,Debug)]
         struct FuncParam {
@@ -69,6 +70,8 @@ pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::E
         println!("{}",output);
     } else if let Some(content) = response["choices"][0]["message"].as_str() {
         println!("{}", content);
+    } else {
+        println!("{:?}",first_choice);
     }
 
     Ok(())
