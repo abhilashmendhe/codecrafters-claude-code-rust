@@ -1,9 +1,11 @@
 use clap::Parser;
-use codecrafters_claude_code::{run, utils::{args_info::Args, config::Config}};
+use codecrafters_claude_code::{
+    run,
+    utils::{args_info::Args, config::Config},
+};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-
     let args = Args::parse();
 
     dotenv::dotenv().ok();
@@ -16,7 +18,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     });
 
-    let model_name = std::env::var("MODEL_NAME").unwrap_or_else(|_| "anthropic/claude-haiku-4.5".to_string());
+    // let model_name = std::env::var("MODEL_NAME").unwrap_or_else(|_| "anthropic/claude-haiku-4.5".to_string());
+    // let model_name = std::env::var("MODEL_NAME").unwrap_or_else(|_| "openrouter/free".to_string());
+    let model_name = "openrouter/free".to_string();
     let config = Config::new(base_url, api_key, model_name);
     run(args, config).await?;
     Ok(())
