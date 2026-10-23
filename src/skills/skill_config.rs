@@ -6,7 +6,8 @@ pub struct SkillConfig {
     description: String,
     license: String,
     metadata: HashMap<String, String>,
-    body_offset: usize,
+    body_offset: u64,
+    skill_path: String,
 }
 
 impl Default for SkillConfig {
@@ -17,6 +18,7 @@ impl Default for SkillConfig {
             license: Default::default(),
             metadata: Default::default(),
             body_offset: Default::default(),
+            skill_path: Default::default(),
         }
     }
 }
@@ -44,7 +46,16 @@ impl SkillConfig {
     pub fn add_metadata(&mut self, mk: String, mv: String) {
         self.metadata.insert(mk, mv);
     }
-    pub fn set_body_offset(&mut self, body_offset: usize) {
+    pub fn body_offset(&self) -> u64 {
+        self.body_offset
+    }
+    pub fn set_body_offset(&mut self, body_offset: u64) {
         self.body_offset = body_offset;
+    }
+    pub fn skill_path(&self) -> String {
+        self.skill_path.to_string()
+    }
+    pub fn set_skill_path(&mut self, skill_path: String) {
+        self.skill_path = skill_path;
     }
 }

@@ -1,3 +1,8 @@
+use std::{
+    fs::File,
+    io::{Read, Seek, SeekFrom},
+};
+
 use crate::{
     agent_funcs::execute_tool::execute_tool,
     skills::read_skills::read_skills_folder_contents,
@@ -12,19 +17,47 @@ pub async fn agent_loop(
     config: Config,
     client: Client<OpenAIConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
+    // println!("{}", args.prompt);
+    let prompt = args.prompt;
+    // println!("{:?}", prompt.to_string());
     // 1. read skill folder first
-    let (content, _skills) = read_skills_folder_contents()?;
-    // println!("{}", content);
-    let mut messages = vec![
-        json!({
-            "role": "system",
-            "content": content
-        }),
-        json!({
-            "role": "user",
-            "content": args.prompt
-        }),
-    ];
+    let (content, skills) = read_skills_folder_contents()?;
+    // println!("{:?}", skills);
+    let mut messages = if prompt.starts_with("/") {
+        let t_prompt = &prompt[1..];
+        let skill_body = if let Some(skill_config) = skills.get(t_prompt) {
+            let skill_file_path = skill_config.skill_path();
+            let mut file = File::open(skill_file_path)?;
+            file.seek(SeekFrom::Start(skill_config.body_offset()))?;
+            let mut buffer = Vec::new(); // Read 8 bytes
+            file.read_to_end(&mut buffer)?;
+            String::from_utf8_lossy(&buffer).trim().to_string()
+            // println!("Read bytes: {:?}", buffer);
+        } else { String::new() };
+        // println!("skill found boyd: {}", skill_body);
+        vec![
+            json!({
+                "role": "system",
+                "content": content
+            }),
+            json!({
+                "role": "user",
+                "content": skill_body
+            }),
+        ]
+    } else {
+        vec![
+            json!({
+                "role": "system",
+                "content": content
+            }),
+            json!({
+                "role": "user",
+                "content": prompt
+            }),
+        ]
+    };
+    // return Ok(());
     // 2. run agent loop
     loop {
         let response: Value = client
