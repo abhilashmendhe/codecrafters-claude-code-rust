@@ -1,7 +1,9 @@
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::agent_funcs::{bash_tool::execute_bash_tool, read_tool::read_tool, write_tool::write_tool};
+use crate::agent_funcs::{
+    bash_tool::execute_bash_tool, read_tool::read_tool, write_tool::write_tool,
+};
 
 pub async fn execute_tool(tool: &Value) -> Result<String, Box<dyn std::error::Error>> {
     // println!("tool: {:#?}\n", tool);
@@ -20,7 +22,6 @@ pub async fn execute_tool(tool: &Value) -> Result<String, Box<dyn std::error::Er
                     let fp = serde_json::from_str::<FuncParam>(func_args)?;
                     ret_content = read_tool(&fp.file_path).await?;
                     // return Ok(r_content);
-
                 }
             } else if func_name.eq("Write") {
                 // println!("Implementing write tool");

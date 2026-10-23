@@ -5,8 +5,8 @@ use crate::{
 use async_openai::{Client, config::OpenAIConfig};
 
 pub mod agent_funcs;
+pub mod skills;
 pub mod utils;
-
 pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::Error>> {
     let open_ai_config = OpenAIConfig::new()
         .with_api_base(config.base_url())

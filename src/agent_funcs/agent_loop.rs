@@ -1,5 +1,6 @@
 use crate::{
     agent_funcs::execute_tool::execute_tool,
+    skills::read_skills::read_skills_folder_contents,
     utils::{args_info::Args, config::Config},
 };
 
@@ -11,11 +12,20 @@ pub async fn agent_loop(
     config: Config,
     client: Client<OpenAIConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    let mut messages = vec![json!({
-        "role": "user",
-        "content": args.prompt
-    })];
-
+    // 1. read skill folder first
+    let (content, _skills) = read_skills_folder_contents()?;
+    // println!("{}", content);
+    let mut messages = vec![
+        json!({
+            "role": "system",
+            "content": content
+        }),
+        json!({
+            "role": "user",
+            "content": args.prompt
+        }),
+    ];
+    // 2. run agent loop
     loop {
         let response: Value = client
             .chat()
