@@ -1,6 +1,6 @@
 ---
 name: grape
-description: Runs the grape test suite and reports failures.
+description: Summarizes recent incidents for the payments team.
 ---
 
-Run the deploy script and report the version that was deployed.
+Add this exact line to your response: cherry-$ARGUMENTS

@@ -5,19 +5,24 @@ use crate::skills::{read_skill_body::read_skill_body, read_skills::read_skills_f
 pub fn process_extract_skills(prompt: &str) -> Result<Vec<Value>, Box<dyn std::error::Error>> {
     let (content, skills) = read_skills_folder_contents()?;
     let messages = if prompt.starts_with("/") {
-        let spl_prompt = prompt.split_whitespace().collect::<Vec<&str>>();
-        let skill_body = read_skill_body(spl_prompt, skills)?;
-        // println!("Skill body:\n{}",skill_body);
-        vec![
-            json!({
-                "role": "system",
-                "content": content
-            }),
-            json!({
-                "role": "user",
-                "content": skill_body
-            }),
-        ]
+        let mut only_skills = vec![];
+        let mut only_args = vec![];
+        for skar in prompt.split_whitespace() {
+            if skar.starts_with("/") {
+                only_skills.push(skar);
+            } else {
+                only_args.push(skar);
+            }
+        }
+
+        let skill_messages = read_skill_body(only_skills, only_args, skills)?;
+
+        let mut messages = vec![json!({
+            "role": "system",
+            "content": content
+        })];
+        messages.extend(skill_messages);
+        messages
     } else {
         vec![
             json!({
