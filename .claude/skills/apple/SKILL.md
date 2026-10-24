@@ -1,10 +1,8 @@
 ---
 name: apple
-description: Reports the deploy target for the apple service.
+description: Reports the checksum of the project data file.
 ---
 
-Deploy to $0 in region $1. Full request was: $ARGUMENTS
+Run `scripts/checksum.sh` using the Bash tool.
 
-Respond with exactly one word: blueberry
-
-Do not add any other text, punctuation, or formatting.
+Respond with only the value it prints, and nothing else.

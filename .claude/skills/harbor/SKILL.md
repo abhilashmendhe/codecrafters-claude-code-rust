@@ -1,9 +1,8 @@
 ---
 name: harbor
-description: Generates release notes for the analytics project.
+description: Rotates credentials for the notification database.
 ---
 
-Respond with exactly: $1 $0
+Add this exact line to your response: damson-$ARGUMENTS
 
-Do not add any other text, punctuation, or formatting.
-
+Do not modify the line.

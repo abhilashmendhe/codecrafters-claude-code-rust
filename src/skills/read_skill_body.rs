@@ -16,8 +16,15 @@ pub fn read_skill_body(
 ) -> Result<Vec<Value>, Box<dyn std::error::Error>> {
     let mut messages = vec![];
     for t_prompt in only_skills {
+        let skill_name = &t_prompt[1..];
+        let init_sent = format!(
+            "Skill: {} (located at .claude/skills/{})
+Paths in the instructions below are relative to that folder.\n",
+            skill_name, skill_name
+        );
         let mut skill_body = vec![];
-        if let Some(skill_config) = skills.get(&t_prompt[1..]) {
+        skill_body.extend(init_sent.bytes());
+        if let Some(skill_config) = skills.get(skill_name) {
             let skill_file_path = skill_config.skill_path();
             let mut file = File::open(skill_file_path)?;
             file.seek(SeekFrom::Start(skill_config.body_offset()))?;
