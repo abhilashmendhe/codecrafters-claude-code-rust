@@ -8,6 +8,7 @@ pub struct SkillConfig {
     metadata: HashMap<String, String>,
     body_offset: u64,
     skill_path: String,
+    skill_exe_path: String,
 }
 
 impl Default for SkillConfig {
@@ -19,6 +20,7 @@ impl Default for SkillConfig {
             metadata: Default::default(),
             body_offset: Default::default(),
             skill_path: Default::default(),
+            skill_exe_path: Default::default(),
         }
     }
 }
@@ -57,5 +59,11 @@ impl SkillConfig {
     }
     pub fn set_skill_path(&mut self, skill_path: String) {
         self.skill_path = skill_path;
+    }
+    pub fn skill_exe_path(&self) -> String {
+        self.skill_exe_path.to_string()
+    }
+    pub fn set_skill_exe_path(&mut self, skill_exe_path: String) {
+        self.skill_exe_path = skill_exe_path;
     }
 }

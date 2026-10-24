@@ -23,8 +23,10 @@ Paths in the instructions below are relative to that folder.\n",
             skill_name, skill_name
         );
         let mut skill_body = vec![];
-        skill_body.extend(init_sent.bytes());
         if let Some(skill_config) = skills.get(skill_name) {
+            if skill_config.skill_exe_path().len() > 0 {
+                skill_body.extend(init_sent.bytes());
+            }
             let skill_file_path = skill_config.skill_path();
             let mut file = File::open(skill_file_path)?;
             file.seek(SeekFrom::Start(skill_config.body_offset()))?;
