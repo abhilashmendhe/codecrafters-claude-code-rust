@@ -3,5 +3,7 @@ name: harbor
 description: Generates release notes for the analytics project.
 ---
 
-Follow the project's conventions and report what you did.
+Respond with exactly: $1 $0
+
+Do not add any other text, punctuation, or formatting.
 

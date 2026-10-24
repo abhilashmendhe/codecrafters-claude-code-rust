@@ -3,5 +3,7 @@ name: beacon
 description: Deploys the billing service to production.
 ---
 
-Follow the project's conventions and report what you did.
+Respond with exactly: $ARGUMENTS
+
+Do not add any other text, punctuation, or formatting.
 
