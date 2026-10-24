@@ -12,7 +12,7 @@ pub fn read_skill_body(
     only_skills: Vec<&str>,
     only_args: Vec<&str>,
     // spl_prompt: Vec<&str>,
-    skills: HashMap<String, SkillConfig>,
+    skills: &HashMap<String, SkillConfig>,
 ) -> Result<Vec<Value>, Box<dyn std::error::Error>> {
     let mut messages = vec![];
     for t_prompt in only_skills {

@@ -1,14 +1,24 @@
+use std::collections::HashMap;
+
 use serde::Deserialize;
 use serde_json::Value;
 
-use crate::agent_funcs::{
-    bash_tool::execute_bash_tool, read_tool::read_tool, write_tool::write_tool,
+use crate::{
+    agent_funcs::{
+        bash_tool::execute_bash_tool, read_tool::read_tool, skill_tool::skill_tool,
+        write_tool::write_tool,
+    },
+    skills::skill_config::SkillConfig,
 };
 
-pub async fn execute_tool(tool: &Value) -> Result<String, Box<dyn std::error::Error>> {
+pub async fn execute_tool(
+    tool: &Value,
+    skills: &HashMap<String, SkillConfig>,
+) -> Result<String, Box<dyn std::error::Error>> {
     // println!("tool: {:#?}\n", tool);
     let mut ret_content = String::new();
     if let Some(tool_call_type) = tool["type"].as_str() {
+        // println!("tool_call_type: {}", tool_call_type);
         if tool_call_type.eq("function") {
             let tool_call_function = &tool["function"];
             let func_name = tool_call_function["name"].as_str().unwrap();
@@ -43,6 +53,16 @@ pub async fn execute_tool(tool: &Value) -> Result<String, Box<dyn std::error::Er
                     }
                     let fp = serde_json::from_str::<FuncParam>(func_args)?;
                     ret_content = execute_bash_tool(&fp.command).await?;
+                }
+            } else if func_name.eq("Skill") {
+                if let Some(func_args) = tool_call_function["arguments"].as_str() {
+                    #[derive(Deserialize, Debug)]
+                    struct FuncParam {
+                        name: String,
+                        args: Option<String>,
+                    }
+                    let fp = serde_json::from_str::<FuncParam>(func_args)?;
+                    skill_tool(&fp.name, &fp.args, skills).await;
                 }
             }
         }
