@@ -46,6 +46,8 @@ pub fn read_skills_folder_contents()
                 skill_config.clear();
             }
             // println!("{:#?}",skills);
+            content_str.push_str("\n\nIf a skill matches the user's request, call the Skill tool with its name and follow the instructions it returns.");
+            // println!("{}", content_str);
             Ok((content_str, skills))
         }
         Err(_) => Ok((String::new(), skills)),

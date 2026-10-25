@@ -16,6 +16,7 @@ pub async fn agent_loop(
     let prompt = args.prompt;
     let (mut messages, skills) = process_extract_skills(&prompt)?;
     // println!("{:#?}", messages);
+    // println!("{:#?}", skills);
     // return Ok(());
     // 2. run agent loop
     loop {

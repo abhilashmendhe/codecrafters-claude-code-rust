@@ -62,7 +62,7 @@ pub async fn execute_tool(
                         args: Option<String>,
                     }
                     let fp = serde_json::from_str::<FuncParam>(func_args)?;
-                    skill_tool(&fp.name, &fp.args, skills).await;
+                    ret_content = skill_tool(&fp.name, &fp.args, skills).await?;
                 }
             }
         }
