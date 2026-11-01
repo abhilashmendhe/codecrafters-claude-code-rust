@@ -1,24 +1,18 @@
-use crate::{
-    agent_funcs::{execute_tool::execute_tool, tools_array::tools_array},
-    skills::process_extract_skills::process_extract_skills,
-    utils::{args_info::Args, config::Config},
-};
-
 use async_openai::{Client, config::OpenAIConfig};
 use serde_json::{Value, json};
 
-pub async fn agent_loop(
-    args: Args,
+use crate::{
+    agent_funcs::{execute_tool::execute_tool, tools_array::tools_array},
+    utils::config::Config,
+};
+
+pub async fn create_agent(
     config: Config,
     client: Client<OpenAIConfig>,
-) -> Result<(), Box<dyn std::error::Error>> {
-    // 1. read skill folder, process and extract
-    let prompt = args.prompt;
-    let (mut messages, skills) = process_extract_skills(&prompt)?;
-    // println!("{:#?}", messages);
-    // println!("{:#?}", skills);
-    // return Ok(());
-    // 2. run agent loop
+    messages: &mut Vec<Value>,
+    skills: std::collections::HashMap<String, crate::skills::skill_config::SkillConfig>,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let mut content = String::new();
     loop {
         let response: Value = client
             .chat()
@@ -38,8 +32,9 @@ pub async fn agent_loop(
         if tool_calls.is_none() {
             // println!("\nNo tool calls\n");
             // Handle plain-text response
-            if let Some(content) = message["content"].as_str() {
-                println!("{}", content);
+            if let Some(cont) = message["content"].as_str() {
+                // println!("{}", content);
+                content.push_str(cont);
             }
             break;
         }
@@ -56,5 +51,5 @@ pub async fn agent_loop(
             }));
         }
     }
-    Ok(())
+    Ok(content)
 }
