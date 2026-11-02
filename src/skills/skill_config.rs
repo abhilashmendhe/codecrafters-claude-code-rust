@@ -5,6 +5,9 @@ pub struct SkillConfig {
     name: String,
     description: String,
     license: String,
+    context: String,
+    agent: String,
+    allowed_tools: String,
     metadata: HashMap<String, String>,
     body_offset: u64,
     skill_path: String,
@@ -17,6 +20,9 @@ impl Default for SkillConfig {
             name: Default::default(),
             description: Default::default(),
             license: Default::default(),
+            context: Default::default(),
+            agent: Default::default(),
+            allowed_tools: Default::default(),
             metadata: Default::default(),
             body_offset: Default::default(),
             skill_path: Default::default(),
@@ -27,9 +33,12 @@ impl Default for SkillConfig {
 
 impl SkillConfig {
     pub fn clear(&mut self) {
-        self.name = String::new();
-        self.description = String::new();
-        self.license = String::new();
+        self.name.clear();
+        self.description.clear();
+        self.license.clear();
+        self.context.clear();
+        self.agent.clear();
+        self.allowed_tools.clear();
         self.metadata.clear();
         self.body_offset = 0;
     }
@@ -42,8 +51,29 @@ impl SkillConfig {
     pub fn set_description(&mut self, description: String) {
         self.description = description;
     }
+    pub fn license(&self) -> String {
+        self.license.clone()
+    }
     pub fn set_license(&mut self, license: String) {
         self.license = license;
+    }
+    pub fn allowed_tools(&self) -> String {
+        self.allowed_tools.clone()
+    }
+    pub fn set_allowed_tools(&mut self, allowed_tools: String) {
+        self.allowed_tools = allowed_tools;
+    } 
+    pub fn context(&self) -> String {
+        self.context.clone()
+    }
+    pub fn set_context(&mut self, context: String) {
+        self.context = context;
+    }
+    pub fn agent(&self) -> String {
+        self.agent.clone()
+    }
+    pub fn set_agent(&mut self, agent: String) {
+        self.agent = agent;
     }
     pub fn add_metadata(&mut self, mk: String, mv: String) {
         self.metadata.insert(mk, mv);

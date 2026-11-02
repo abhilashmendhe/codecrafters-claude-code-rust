@@ -1,7 +1,9 @@
 ---
 name: cinder
-description: Rotates credentials for the notification database.
+description: Use this skill when the user asks who owns the payments dashboard.
+context: fork
 ---
 
-Follow the project's conventions and report what you did.
+Respond with exactly one word: medlar
 
+Do not add any other text, punctuation, or formatting.

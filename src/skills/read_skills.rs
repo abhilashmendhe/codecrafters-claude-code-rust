@@ -38,6 +38,12 @@ pub fn read_skills_folder_contents()
                         skill_config.add_metadata(fv.trim().to_string(), sv.clone());
                     } else if fv.starts_with("license") {
                         skill_config.set_license(sv.to_string());
+                    } else if fv.starts_with("context") {
+                        skill_config.set_context(sv.to_string());
+                    } else if fv.starts_with("agent") {
+                        skill_config.set_agent(sv.to_string());
+                    } else if fv.starts_with("allowed_tools") {
+                        skill_config.set_allowed_tools(sv.to_string());
                     } else if fv.starts_with("body_offset") {
                         skill_config.set_body_offset(sv.parse::<u64>()?);
                     }
