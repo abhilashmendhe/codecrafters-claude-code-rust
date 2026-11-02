@@ -62,7 +62,7 @@ impl SkillConfig {
     }
     pub fn set_allowed_tools(&mut self, allowed_tools: String) {
         self.allowed_tools = allowed_tools;
-    } 
+    }
     pub fn context(&self) -> String {
         self.context.clone()
     }
