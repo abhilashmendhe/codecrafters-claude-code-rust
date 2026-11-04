@@ -3,15 +3,16 @@ use std::collections::HashMap;
 use serde_json::{Value, json};
 
 use crate::skills::{
-    read_skill_body::read_skill_body,
-    read_skills::read_skills_folder_contents,
+    read_skill_body::read_skill_body, read_skills::read_skills_folder_contents,
     skill_config::SkillConfig,
 };
 
 pub fn process_extract_skills(
     prompt: &str,
-) -> Result<(Vec<Value>, HashMap<String, SkillConfig>, Vec<String>), Box<dyn std::error::Error>> {
+) -> Result<(Vec<Value>, HashMap<String, SkillConfig>, Vec<String>, bool), Box<dyn std::error::Error>>
+{
     let (content, skills, fork_skills) = read_skills_folder_contents()?;
+    let mut f = false;
     let messages = if prompt.starts_with("/") {
         let mut only_skills = vec![];
         let mut only_args = vec![];
@@ -28,6 +29,7 @@ pub fn process_extract_skills(
             "role": "system",
             "content": content
         })];
+        f = true;
         messages.extend(skill_messages);
         messages
     } else {
@@ -36,11 +38,11 @@ pub fn process_extract_skills(
                 "role": "system",
                 "content": content
             }),
-            json!({
-                "role": "user",
-                "content": prompt
-            }),
+            // json!({
+            //     "role": "user",
+            //     "content": prompt
+            // }),
         ]
     };
-    Ok((messages, skills, fork_skills))
+    Ok((messages, skills, fork_skills, f))
 }
