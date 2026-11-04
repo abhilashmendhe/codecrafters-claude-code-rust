@@ -7,10 +7,10 @@ use crate::{
 };
 
 pub async fn create_agent(
-    config: Config,
-    client: Client<OpenAIConfig>,
+    config: &Config,
+    client: &Client<OpenAIConfig>,
     messages: &mut Vec<Value>,
-    skills: std::collections::HashMap<String, crate::skills::skill_config::SkillConfig>,
+    skills: &std::collections::HashMap<String, crate::skills::skill_config::SkillConfig>,
 ) -> Result<String, Box<dyn std::error::Error>> {
     let mut content = String::new();
     loop {

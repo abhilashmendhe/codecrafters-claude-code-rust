@@ -5,7 +5,8 @@ use std::{
 };
 
 pub fn read_skills_folder_contents()
--> Result<(String, HashMap<String, SkillConfig>), Box<dyn std::error::Error>> {
+-> Result<(String, HashMap<String, SkillConfig>, Vec<String>), Box<dyn std::error::Error>> {
+    let mut fork_skills = vec![];
     let mut skills = HashMap::new();
     let mut skill_config = SkillConfig::default();
     let mut content_str = String::from("You have access to the following skills:\n");
@@ -39,6 +40,9 @@ pub fn read_skills_folder_contents()
                     } else if fv.starts_with("license") {
                         skill_config.set_license(sv.to_string());
                     } else if fv.starts_with("context") {
+                        if sv.contains("fork") {
+                            fork_skills.push(skill_config.name().trim().to_string());
+                        }
                         skill_config.set_context(sv.to_string());
                     } else if fv.starts_with("agent") {
                         skill_config.set_agent(sv.to_string());
@@ -54,8 +58,8 @@ pub fn read_skills_folder_contents()
             // println!("{:#?}",skills);
             content_str.push_str("\n\nIf a skill matches the user's request, call the Skill tool with its name and follow the instructions it returns.");
             // println!("{}", content_str);
-            Ok((content_str, skills))
+            Ok((content_str, skills, fork_skills))
         }
-        Err(_) => Ok((String::new(), skills)),
+        Err(_) => Ok((String::new(), skills, fork_skills)),
     }
 }
