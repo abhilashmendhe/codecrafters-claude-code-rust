@@ -50,6 +50,6 @@ pub async fn init_agents(
         let content = create_agent(&config, &client, &mut messages, &skills).await?;
         println!("{}", content);
     }
-    
+
     Ok(())
 }

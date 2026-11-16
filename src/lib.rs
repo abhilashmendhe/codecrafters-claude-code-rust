@@ -5,6 +5,7 @@ use crate::{
 use async_openai::{Client, config::OpenAIConfig};
 
 pub mod agent_funcs;
+pub mod lsp;
 pub mod skills;
 pub mod utils;
 pub async fn run(args: Args, config: Config) -> Result<(), Box<dyn std::error::Error>> {
